@@ -1,1 +1,257 @@
+//FAZA 1
+#include <iostream>
+using namespace std;
 
+//Domeniu: Magazin de Cosmetice 
+//intrebari: cum folosesc functia statica?
+
+class ApaDeParfum {
+public:
+	const int id;
+	int n;										//dimens vector
+	float* v;									//in vector voi stoca preturile parfumurilor
+	string marca;
+	bool stoc;
+	static int rating;
+
+	ApaDeParfum() :id(1)					   //CONSTRUCTOR DEFAULT
+	{
+		this->v = NULL;
+		this->n = 0;
+		this->marca = "Mugler";
+		this->stoc = true;
+	}
+
+	ApaDeParfum(int id, int n, float* v, string marca, bool stoc) :id(id) //CONSTRUCTOR CU PARAMETRI (TOTI) + ATRIBUT CONSTANT id
+	{
+		if (n > 0 && v != NULL)
+		{
+			this->n = n;
+			this->v = new float[n];
+			for (int i = 0;i < n;i++)
+				this->v[i] = v[i];
+		}
+		else
+		{
+			this->v = NULL;
+			this->n = 0;
+		}
+
+		this->marca = marca;
+		this->stoc = stoc;
+	}
+
+	ApaDeParfum(string marca, bool stoc) :id(3)							   //CONSTRUCTOR CU 2 PARAMETRI + ATRIBUT CONSTANT id
+	{
+		this->n = 0;
+		this->v = NULL;
+		this->marca = marca;
+		this->stoc = stoc;
+	}
+
+	~ApaDeParfum()														   //DESTRUCTOR = dezaloc spatiul folosit de v
+	{
+		if (this->v != NULL)
+			delete[]this->v;
+	}
+
+	void afisare()
+	{
+		cout << id << ". ";
+		cout << "Parfum: " << marca << endl;
+		cout << "   Sunt in stoc produse cu aceasta marca? " << (stoc ? "DA" : "NU");
+	}
+
+	float pretMax()
+	{
+		int max = 0;
+		for (int i = 0;i < n;i++)
+			if (this->v[i] > max)
+				max = this->v[i];
+		return max;
+	}
+
+	float pretMediu()
+	{
+		float suma = 0;
+		for (int i = 0;i < n;i++)
+			suma = suma + this->v[i];
+		int media = suma / n;
+		return media;
+	}
+};
+
+int ApaDeParfum::rating = 3;  //ATRIBUT STATIC
+static int ratingMin()        //FUNCTIE STATICA
+{
+	return ApaDeParfum::rating;
+}
+
+class Machiaj {
+public:
+	const int id;
+	char* categorie;
+	int pret;
+	bool crueltyFree;
+	static int durataExpirare; //dupa cate luni de la deschidere expira produsul?
+
+	Machiaj() :id(1)
+	{
+		this->categorie = new char[strlen("Paleta") + 1];
+		strcpy_s(this->categorie, strlen("Paleta") + 1, "Paleta");
+		this->pret = 100;
+		this->crueltyFree = false;
+	}
+
+	Machiaj(int id, const char* categorie, float pret, bool crueltyFree) :id(id)
+	{
+		this->categorie = new char[strlen(categorie) + 1];
+		strcpy_s(this->categorie, strlen(categorie) + 1, categorie);
+		this->pret = pret;
+		this->crueltyFree = crueltyFree;
+	}
+
+	Machiaj(const char* categorie, bool crueltyFree) :id(3)
+	{
+		this->categorie = new char[strlen(categorie) + 1];
+		strcpy_s(this->categorie, strlen(categorie) + 1, categorie);
+		this->crueltyFree = crueltyFree;
+	}
+
+	~Machiaj() //DESTRUCTOR
+	{
+		if (this->categorie != NULL)
+			delete[]this->categorie;
+	}
+
+	void afisare()
+	{
+		cout << id << ". ";
+		cout << "Categoria prodului de machiaj: " << categorie << endl;
+		cout << "   Pret: " << pret << endl;
+		cout << "   Produsul este Cruelty Free? " << (crueltyFree ? "DA" : "NU");
+	}
+};
+
+int Machiaj::durataExpirare = 12;
+static int durataExpirare()  //FUNCTIE STATICA
+{
+	return Machiaj::durataExpirare;
+}
+
+class Manichiura {
+public:
+	const int id;
+	string categorie;
+	int m;
+	int* w;								//aici voi stoca cate produse din categoria respectiva avem
+	bool produsDefect;					//exista produse din categoria respectiva care au defecte (ex. defecte fizice, data de expirare depasita) ?
+	static int rating;
+
+	Manichiura() :id(1)
+	{
+		this->categorie = "Ingrijirea unghiilor";
+		this->w = NULL;
+		this->m = 0;
+		this->produsDefect = false;
+	}
+
+	Manichiura(int id, string categorie, int m, int* w, bool produsDefect) :id(id)
+	{
+		this->categorie = categorie;
+		if (m > 0 && w != NULL)
+		{
+			this->m = m;
+			this->w = new int[m];
+			for (int i = 0;i < m;i++)
+				this->w[i] = w[i];
+		}
+		else
+		{
+			this->w = NULL;
+			this->m = 0;
+		}
+		this->produsDefect = produsDefect;
+	}
+
+	Manichiura(string categorie, bool produsDefect) :id(id)
+	{
+		this->categorie = categorie;
+		this->produsDefect = produsDefect;
+	}
+
+	~Manichiura()
+	{
+		if (this->w != NULL)
+		{
+			delete[]this->w;
+		}
+	}
+
+	void afisare()
+	{
+		cout << id << ". ";
+		cout << "Categoria: " << categorie << endl;
+		cout << "   Sunt in stoc produse din ac categorie care au un defect? " << (produsDefect ? "DA" : "NU");
+	}
+};
+
+int Manichiura::rating = 2; 
+static int rating()  //FUNCTIE STATICA
+{
+	return Manichiura::rating;
+}
+
+int main()
+{
+	float v[10] = { 125, 140, 167, 211, 110, 464, 257, 329, 159, 255 }; //vector cu preturile parfumurilor
+
+	ApaDeParfum parfum1;
+	parfum1.afisare();
+
+	cout << endl << endl;
+	ApaDeParfum parfum2(2, 10, v, "Givenchy", false);
+	parfum2.afisare();
+	cout << endl << "   Pretul maxim al unui parfum din ac marca este: " << parfum2.pretMax();
+	cout << endl << "   Pretul mediu al parfumurilor din ac marca este: " << parfum2.pretMediu();
+
+	cout << endl << endl;
+	ApaDeParfum parfum3("Armani", true);
+	parfum3.afisare();
+
+	cout <<endl<<endl << "   Rating-ul minim pentru selectia de parfumuri este de: " << ratingMin()<<" stele.";
+
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
+
+	Machiaj prod1;
+	prod1.afisare();
+
+	cout << endl << endl;
+	Machiaj prod2(2, "Fard de pleoape", 80, true);
+	prod2.afisare();
+
+	cout << endl<<endl;
+	Machiaj prod3("Ruj", false); 
+	prod3.afisare();
+
+	cout << endl << endl << "   Durata de expirare a produselor de machiaj este de: " << durataExpirare() << " luni.";
+	
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
+
+	int w[5] = { 10, 158, 52, 4, 0 }; //vector care retine cate produse din categoria selectata avem
+
+	Manichiura man1;
+	man1.afisare();
+
+	cout << endl << endl;
+	Manichiura man2(2, "Lac de unghii", 5, w, true);
+	man2.afisare();
+
+	cout << endl << endl;
+	Manichiura man3("Acetona", false);
+	man3.afisare();
+
+	cout << endl << endl << "   Rating-ul acestor produse porneste de la: " << rating() << " stele.";
+
+	cout << endl << endl;
+}
