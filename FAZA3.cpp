@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class ApaDeParfum {
@@ -717,4 +718,69 @@ int main()
 		cout << "   Cele doua obiecte sunt identice." << endl;
 
 	cout << endl << endl << "   Rating-ul acestor produse porneste de la: " << Manichiura::Rating() << " stele.";
+
+	cout << endl << endl<<endl<<endl;
+
+	//FAZA 4
+	// 
+	//vector cu obiecte de tipul clasei ApaDeParfum
+	const int nrParf = 2;
+	ApaDeParfum vectorParf[nrParf];
+
+	cout << "Citire obiecte pentru vectorParfum:" << endl;
+	for (int i = 0; i < nrParf; ++i) {
+		cin >> vectorParf[i];
+	}
+
+	cout << "\nAfisare obiecte pentru vectorParfum:" << endl;
+	for (int i = 0; i < nrParf; ++i) {
+		cout << vectorParf[i] << endl;
+	}
+
+	//vector cu obiecte de tipul clasei Machiaj
+	const int nrProd= 3;
+	Machiaj vectorMachiaj[nrProd];
+
+	cout << "\nCitire obiecte pentru vectorMachiaj:" << endl;
+	for (int i = 0; i < nrProd; ++i) {
+		cin >> vectorMachiaj[i];
+	}
+
+	cout << "\nAfisare obiecte pentru vectorMachiaj:" << endl;
+	for (int i = 0; i < nrProd; ++i) {
+		cout << vectorMachiaj[i] << endl;
+	}
+
+	//vector cu obiecte de tipul clasei Manichiura
+	const int nrProdM = 3;
+	Manichiura vectorManichiura[nrProdM];
+
+	cout << "\nCitire obiecte pentru vectorManichiura:" << endl;
+	for (int i = 0; i < nrProdM; ++i) {
+		cin >> vectorManichiura[i];
+	}
+
+	cout << "\nAfisare obiecte pentru vectorManichiura:" << endl;
+	for (int i = 0; i < nrProdM; ++i) {
+		cout << vectorManichiura[i] << endl;
+	}
+
+	//matrice de obiecte ApaDeParfum
+	const int nrlinii = 2;
+	const int nrcoloane = 2;
+	ApaDeParfum matrice[nrlinii][nrcoloane];
+
+	cout << "\nCitire obiecte pentru matricea ApaDeParfum:" << endl;
+	for (int i = 0; i < nrlinii; ++i) {
+		for (int j = 0; j < nrcoloane; ++j) {
+			cin >> matrice[i][j];
+		}
+	}
+
+	cout << "\nAfisare obiecte pentru matricea ApaDeParfum:" << endl;
+	for (int i = 0; i < nrlinii; ++i) {
+		for (int j = 0; j < nrcoloane; ++j) {
+			cout << matrice[i][j] << endl;
+		}
+	}
 }
