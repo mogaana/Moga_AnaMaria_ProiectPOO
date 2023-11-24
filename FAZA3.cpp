@@ -197,12 +197,17 @@ public:
 			parfum.v = new float[parfum.n];
 			for (int i = 0;i < parfum.n;i++)
 			{
-				cout << "Pret parfum " << i + 1 << ":";
+				cout << "Pret parfum " << i + 1 << ": ";
 				in >> parfum.v[i];
 			}
 		}
 		else parfum.v = NULL;
 		return in;
+	}
+
+	float operator[](int index) {
+		if (index >= 0 && index < this->n)
+			return this->v[index];
 	}
 
 	static int ratingMin()
@@ -602,6 +607,87 @@ public:
 
 int Manichiura::rating = 2;
 
+
+//FAZA 5
+class MagazinOnline {
+private:
+	int nrparf;
+	ApaDeParfum* parfum; //vector de obiecte
+	bool areAlcool;
+
+public:
+	MagazinOnline() 
+	{
+		this->nrparf = 2;
+		this->parfum = new ApaDeParfum[2]; //apelez constructorul default din clasa ApaDeParfum
+		this->areAlcool = false;
+	}
+
+	~MagazinOnline() 
+	{
+		if (this->parfum != NULL)
+			delete[]this->parfum;
+	}
+
+	int getNrParf() {
+		return this->nrparf;
+	}
+
+	void setNrParf(int nrparf) {
+		this->nrparf = nrparf;
+	}
+
+	ApaDeParfum* getParfum() {
+		return this->parfum;
+	}
+
+	void setParfum(int nrparf, ApaDeParfum* parfum){
+		if (this->parfum != NULL)
+			delete[]this->parfum;
+		if (nrparf > 0 && parfum != NULL)
+		{
+			this->nrparf = nrparf;
+			this->parfum = new ApaDeParfum[nrparf];
+			for (int i = 0;i < nrparf;i++)
+				this->parfum[i] = parfum[i];
+		}
+		else
+		{
+			this->parfum = NULL;
+			this->nrparf = 0;
+		}
+	}
+
+	bool getAlcool() {
+		return this->areAlcool;
+	}
+
+	void setAlcool(bool areAlcool) {
+		this->areAlcool = areAlcool;
+	}
+
+	friend ostream& operator<<(ostream& out, const MagazinOnline& magazin) { //????????????????
+		out << "NUMAR PARFUMURI: "<<endl;
+		if (magazin.parfum != NULL)
+		{
+			for (int i = 0;i < magazin.nrparf;i++)
+				out << magazin.parfum[i] << " "<<endl;
+		}
+		out << (magazin.areAlcool ? "Produsele contin alcool." : "Produsele NU contin alcool.");
+		return out;
+	}
+
+	ApaDeParfum operator[](int index) {
+		if (index >= 0 && index < this->nrparf)
+			return this->parfum[index];
+	}
+
+	explicit operator bool() {
+		return this->areAlcool;
+	}
+};
+
+
 int main()
 {
 	float v[10] = { 125, 140, 167, 211, 110, 464, 257, 329, 159, 255 }; //vector cu preturile parfumurilor
@@ -719,68 +805,80 @@ int main()
 
 	cout << endl << endl << "   Rating-ul acestor produse porneste de la: " << Manichiura::Rating() << " stele.";
 
+	cout << endl << endl << endl << endl;
+
+	////FAZA 4
+	//
+	////vector cu obiecte de tipul clasei ApaDeParfum
+	//const int nrParf = 2;
+	//ApaDeParfum vectorParf[nrParf];
+
+	//cout << "Citire obiecte pentru vectorParfum:" << endl;
+	//for (int i = 0; i < nrParf; ++i) {
+	//	cin >> vectorParf[i];
+	//}
+
+	//cout << "\nAfisare obiecte pentru vectorParfum:" << endl;
+	//for (int i = 0; i < nrParf; ++i) {
+	//	cout << vectorParf[i] << endl;
+	//}
+
+	////vector cu obiecte de tipul clasei Machiaj
+	//const int nrProd =2;
+	//Machiaj vectorMachiaj[nrProd];
+
+	//cout << "\nCitire obiecte pentru vectorMachiaj:" << endl;
+	//for (int i = 0; i < nrProd; ++i) {
+	//	cin >> vectorMachiaj[i];
+	//}
+
+	//cout << "\nAfisare obiecte pentru vectorMachiaj:" << endl;
+	//for (int i = 0; i < nrProd; ++i) {
+	//	cout << vectorMachiaj[i] << endl;
+	//}
+
+	////vector cu obiecte de tipul clasei Manichiura
+	//const int nrProdM = 2;
+	//Manichiura vectorManichiura[nrProdM];
+
+	//cout << "\nCitire obiecte pentru vectorManichiura:" << endl;
+	//for (int i = 0; i < nrProdM; ++i) {
+	//	cin >> vectorManichiura[i];
+	//}
+
+	//cout << "\nAfisare obiecte pentru vectorManichiura:" << endl;
+	//for (int i = 0; i < nrProdM; ++i) {
+	//	cout << vectorManichiura[i] << endl;
+	//}
+
+	////matrice de obiecte ApaDeParfum
+	//const int nrlinii = 2;
+	//const int nrcoloane = 2;
+	//ApaDeParfum matrice[nrlinii][nrcoloane];
+
+	//cout << "\nCitire obiecte pentru matricea ApaDeParfum:" << endl;
+	//for (int i = 0; i < nrlinii; ++i) {
+	//	for (int j = 0; j < nrcoloane; ++j) {
+	//		cin >> matrice[i][j];
+	//	}
+	//}
+
+	//cout << "\nAfisare obiecte pentru matricea ApaDeParfum:" << endl;
+	//for (int i = 0; i < nrlinii; ++i) {
+	//	for (int j = 0; j < nrcoloane; ++j) {
+	//		cout << matrice[i][j] << endl;
+	//	}
+	//}
+
+	//FAZA 5
+	cout<<"Relatia de HAS A: "<<endl;
+	MagazinOnline magazin;
+	cout << magazin << endl; //?????????????
+	magazin[1] = parfum1;
+	cout << magazin[1].getMarca() << endl; //se va afisa Marca din constructorul default
+	bool alcool = (bool)magazin;
+	cout << magazin;
+
 	cout << endl << endl<<endl<<endl;
-
-	//FAZA 4
-	// 
-	//vector cu obiecte de tipul clasei ApaDeParfum
-	const int nrParf = 2;
-	ApaDeParfum vectorParf[nrParf];
-
-	cout << "Citire obiecte pentru vectorParfum:" << endl;
-	for (int i = 0; i < nrParf; ++i) {
-		cin >> vectorParf[i];
-	}
-
-	cout << "\nAfisare obiecte pentru vectorParfum:" << endl;
-	for (int i = 0; i < nrParf; ++i) {
-		cout << vectorParf[i] << endl;
-	}
-
-	//vector cu obiecte de tipul clasei Machiaj
-	const int nrProd= 3;
-	Machiaj vectorMachiaj[nrProd];
-
-	cout << "\nCitire obiecte pentru vectorMachiaj:" << endl;
-	for (int i = 0; i < nrProd; ++i) {
-		cin >> vectorMachiaj[i];
-	}
-
-	cout << "\nAfisare obiecte pentru vectorMachiaj:" << endl;
-	for (int i = 0; i < nrProd; ++i) {
-		cout << vectorMachiaj[i] << endl;
-	}
-
-	//vector cu obiecte de tipul clasei Manichiura
-	const int nrProdM = 3;
-	Manichiura vectorManichiura[nrProdM];
-
-	cout << "\nCitire obiecte pentru vectorManichiura:" << endl;
-	for (int i = 0; i < nrProdM; ++i) {
-		cin >> vectorManichiura[i];
-	}
-
-	cout << "\nAfisare obiecte pentru vectorManichiura:" << endl;
-	for (int i = 0; i < nrProdM; ++i) {
-		cout << vectorManichiura[i] << endl;
-	}
-
-	//matrice de obiecte ApaDeParfum
-	const int nrlinii = 2;
-	const int nrcoloane = 2;
-	ApaDeParfum matrice[nrlinii][nrcoloane];
-
-	cout << "\nCitire obiecte pentru matricea ApaDeParfum:" << endl;
-	for (int i = 0; i < nrlinii; ++i) {
-		for (int j = 0; j < nrcoloane; ++j) {
-			cin >> matrice[i][j];
-		}
-	}
-
-	cout << "\nAfisare obiecte pentru matricea ApaDeParfum:" << endl;
-	for (int i = 0; i < nrlinii; ++i) {
-		for (int j = 0; j < nrcoloane; ++j) {
-			cout << matrice[i][j] << endl;
-		}
-	}
+	
 }
