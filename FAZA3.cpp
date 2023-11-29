@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 using namespace std;
 
 class ApaDeParfum {
@@ -213,6 +214,41 @@ public:
 	static int ratingMin()
 	{
 		return rating;
+	}
+
+
+
+	//FAZA 6
+	friend ofstream& operator<<(ofstream& out, const ApaDeParfum& parfum)
+	{
+		out << parfum.marca << " " << parfum.stoc << " " << parfum.rating;
+		for (int i = 0; i < parfum.n; i++)
+			out << parfum.v[i] << " ";
+		return out;
+	}
+
+	friend ifstream& operator>>(ifstream& in, ApaDeParfum& parfum)
+	{
+		in >> parfum.marca >> parfum.stoc >> parfum.n;
+		if (parfum.v != NULL)
+		{
+			for (int i = 0; i < parfum.n; i++)
+			{
+				delete[] & parfum.v[i];
+			}
+			delete[] parfum.v;
+		}
+
+		if (parfum.n > 0)
+		{
+			parfum.v = new float[parfum.n];
+			for (int i = 0; i < parfum.n; i++)
+			{
+				parfum.v[i] = parfum.v[i];
+			}
+		}
+
+		return in;
 	}
 };
 
@@ -616,14 +652,14 @@ private:
 	bool areAlcool;
 
 public:
-	MagazinOnline() 
+	MagazinOnline()
 	{
 		this->nrparf = 2;
 		this->parfum = new ApaDeParfum[2]; //apelez constructorul default din clasa ApaDeParfum
 		this->areAlcool = false;
 	}
 
-	~MagazinOnline() 
+	~MagazinOnline()
 	{
 		if (this->parfum != NULL)
 			delete[]this->parfum;
@@ -641,7 +677,7 @@ public:
 		return this->parfum;
 	}
 
-	void setParfum(int nrparf, ApaDeParfum* parfum){
+	void setParfum(int nrparf, ApaDeParfum* parfum) {
 		if (this->parfum != NULL)
 			delete[]this->parfum;
 		if (nrparf > 0 && parfum != NULL)
@@ -667,11 +703,11 @@ public:
 	}
 
 	friend ostream& operator<<(ostream& out, const MagazinOnline& magazin) { //????????????????
-		out << "NUMAR PARFUMURI: "<<endl;
+		out << "NUMAR PARFUMURI: " << endl;
 		if (magazin.parfum != NULL)
 		{
 			for (int i = 0;i < magazin.nrparf;i++)
-				out << magazin.parfum[i] << " "<<endl;
+				out << magazin.parfum[i] << " " << endl;
 		}
 		out << (magazin.areAlcool ? "Produsele contin alcool." : "Produsele NU contin alcool.");
 		return out;
@@ -807,78 +843,35 @@ int main()
 
 	cout << endl << endl << endl << endl;
 
-	////FAZA 4
-	//
-	////vector cu obiecte de tipul clasei ApaDeParfum
-	//const int nrParf = 2;
-	//ApaDeParfum vectorParf[nrParf];
+	////FAZA 5
+	//cout << "Relatia de HAS A: " << endl;
+	//MagazinOnline magazin;
+	//cout << magazin << endl; //?????????????
+	//magazin[1] = parfum1;
+	//cout << magazin[1].getMarca() << endl; //se va afisa Marca din constructorul default
+	//bool alcool = (bool)magazin;
+	//cout << magazin;
 
-	//cout << "Citire obiecte pentru vectorParfum:" << endl;
-	//for (int i = 0; i < nrParf; ++i) {
-	//	cin >> vectorParf[i];
-	//}
+	//cout << endl << endl << endl << endl;
 
-	//cout << "\nAfisare obiecte pentru vectorParfum:" << endl;
-	//for (int i = 0; i < nrParf; ++i) {
-	//	cout << vectorParf[i] << endl;
-	//}
+	//FAZA 6
 
-	////vector cu obiecte de tipul clasei Machiaj
-	//const int nrProd =2;
-	//Machiaj vectorMachiaj[nrProd];
+	ApaDeParfum parfum11;
+	ofstream file1;
+	file1.open("parfum.txt", ios::out);
+	file1 << parfum11;
+	file1.close();
 
-	//cout << "\nCitire obiecte pentru vectorMachiaj:" << endl;
-	//for (int i = 0; i < nrProd; ++i) {
-	//	cin >> vectorMachiaj[i];
-	//}
+	ApaDeParfum parfum12;
+	ifstream file2;
+	file2.open("parfum.txt", ios::in);
+	file2 >> parfum12;
+	cout << parfum12;
+	file2.close();
 
-	//cout << "\nAfisare obiecte pentru vectorMachiaj:" << endl;
-	//for (int i = 0; i < nrProd; ++i) {
-	//	cout << vectorMachiaj[i] << endl;
-	//}
+	cout << endl << endl;
 
-	////vector cu obiecte de tipul clasei Manichiura
-	//const int nrProdM = 2;
-	//Manichiura vectorManichiura[nrProdM];
 
-	//cout << "\nCitire obiecte pentru vectorManichiura:" << endl;
-	//for (int i = 0; i < nrProdM; ++i) {
-	//	cin >> vectorManichiura[i];
-	//}
 
-	//cout << "\nAfisare obiecte pentru vectorManichiura:" << endl;
-	//for (int i = 0; i < nrProdM; ++i) {
-	//	cout << vectorManichiura[i] << endl;
-	//}
 
-	////matrice de obiecte ApaDeParfum
-	//const int nrlinii = 2;
-	//const int nrcoloane = 2;
-	//ApaDeParfum matrice[nrlinii][nrcoloane];
-
-	//cout << "\nCitire obiecte pentru matricea ApaDeParfum:" << endl;
-	//for (int i = 0; i < nrlinii; ++i) {
-	//	for (int j = 0; j < nrcoloane; ++j) {
-	//		cin >> matrice[i][j];
-	//	}
-	//}
-
-	//cout << "\nAfisare obiecte pentru matricea ApaDeParfum:" << endl;
-	//for (int i = 0; i < nrlinii; ++i) {
-	//	for (int j = 0; j < nrcoloane; ++j) {
-	//		cout << matrice[i][j] << endl;
-	//	}
-	//}
-
-	//FAZA 5
-	cout<<"Relatia de HAS A: "<<endl;
-	MagazinOnline magazin;
-	cout << magazin << endl; //?????????????
-	magazin[1] = parfum1;
-	cout << magazin[1].getMarca() << endl; //se va afisa Marca din constructorul default
-	bool alcool = (bool)magazin;
-	cout << magazin;
-
-	cout << endl << endl<<endl<<endl;
-	
 }
