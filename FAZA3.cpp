@@ -130,7 +130,7 @@ public:
 	friend float pretMediu(const ApaDeParfum& parfum);
 
 	//FAZA 3
-	ApaDeParfum operator=(const ApaDeParfum& p)								//OPERATOR = (DE ATRIBUIRE)
+	ApaDeParfum operator=(const ApaDeParfum& p)
 	{
 		if (this != &p)
 		{
@@ -155,7 +155,7 @@ public:
 		return *this;
 	}
 
-	ApaDeParfum operator+(const ApaDeParfum& p) // OPERATOR +                  
+	ApaDeParfum operator+(const ApaDeParfum& p)
 	{
 		ApaDeParfum aux = *this;
 		aux.n = this->n + p.n;
@@ -177,9 +177,9 @@ public:
 		return aux;
 	}
 
-	friend ostream& operator<<(ostream& out, const ApaDeParfum& parfum); //OPERATOR <<
+	friend ostream& operator<<(ostream& out, const ApaDeParfum& parfum);
 
-	friend istream& operator>>(istream& in, ApaDeParfum& parfum)	    //OPERATOR >> inline
+	friend istream& operator>>(istream& in, ApaDeParfum& parfum)
 	{
 		cout << "Introduceti MARCA: ";
 		in >> parfum.marca;
@@ -198,7 +198,7 @@ public:
 			parfum.v = new float[parfum.n];
 			for (int i = 0;i < parfum.n;i++)
 			{
-				cout << "Pret parfum " << i + 1 << ": ";
+				cout << "Pret parfum " << i + 1 << ":";
 				in >> parfum.v[i];
 			}
 		}
@@ -206,49 +206,9 @@ public:
 		return in;
 	}
 
-	float operator[](int index) {
-		if (index >= 0 && index < this->n)
-			return this->v[index];
-	}
-
 	static int ratingMin()
 	{
 		return rating;
-	}
-
-
-
-	//FAZA 6
-	friend ofstream& operator<<(ofstream& out, const ApaDeParfum& parfum)
-	{
-		out << parfum.marca << " " << parfum.stoc << " " << parfum.rating;
-		for (int i = 0; i < parfum.n; i++)
-			out << parfum.v[i] << " ";
-		return out;
-	}
-
-	friend ifstream& operator>>(ifstream& in, ApaDeParfum& parfum)
-	{
-		in >> parfum.marca >> parfum.stoc >> parfum.n;
-		if (parfum.v != NULL)
-		{
-			for (int i = 0; i < parfum.n; i++)
-			{
-				delete[] & parfum.v[i];
-			}
-			delete[] parfum.v;
-		}
-
-		if (parfum.n > 0)
-		{
-			parfum.v = new float[parfum.n];
-			for (int i = 0; i < parfum.n; i++)
-			{
-				parfum.v[i] = parfum.v[i];
-			}
-		}
-
-		return in;
 	}
 };
 
@@ -272,7 +232,7 @@ float pretMediu(const ApaDeParfum& parfum)
 	return media;
 }
 
-ostream& operator<<(ostream& out, const ApaDeParfum& parfum)                        //FUNCTIE OPERATOR <<
+ostream& operator<<(ostream& out, const ApaDeParfum& parfum)
 {
 	out << parfum.getId() << ". " << "Parfum: " << parfum.marca << endl;
 	out << "   Sunt in stoc produse cu ac marca? (0-NU, 1-DA) " << parfum.stoc << endl;
@@ -378,7 +338,7 @@ public:
 	}
 
 	//FAZA 3
-	Machiaj operator=(const Machiaj& p)	 //OPERATOR = (DE ATRIBUIRE)
+	Machiaj operator=(const Machiaj& p)
 	{
 		if (this != &p)
 		{
@@ -394,11 +354,11 @@ public:
 		return *this;
 	}
 
-	bool operator<=(const Machiaj& p) {  //OPERATOR <=
+	bool operator<=(const Machiaj& p) {
 		return this->pret <= p.pret;
 	}
 
-	friend ostream& operator<<(ostream& out, const Machiaj machiaj) //OPERATOR <<
+	friend ostream& operator<<(ostream& out, const Machiaj machiaj)
 	{
 		out << machiaj.id << ". " << "Categoria produsului de machiaj: " << machiaj.categorie << endl;
 		out << "   Pret: " << machiaj.pret << endl;
@@ -407,17 +367,16 @@ public:
 		return out;
 	}
 
-	friend istream& operator>>(istream& in, Machiaj& machiaj) //OPERATOR >>
+	friend istream& operator>>(istream& in, Machiaj& machiaj)
 	{
 		cout << "Introduceti CATEGORIA produsului de machiaj: ";
-		char buffer[256];
+		char buffer[30];
 		in >> buffer;
 		machiaj.setCategorie(buffer);
 		if (machiaj.categorie != NULL)
 			delete[]machiaj.categorie;
 		machiaj.categorie = new char[strlen(buffer) + 1];
 		strcpy_s(machiaj.categorie, strlen(buffer) + 1, buffer);
-
 		cout << "Introduceti PRET: ";
 		in >> machiaj.pret;
 		cout << "Produsul este CRUELTY FREE? (0-NU, 1-DA) ";
@@ -560,7 +519,7 @@ public:
 	}
 
 	//FAZA 3
-	Manichiura operator=(const Manichiura& p) //OPERATOR = (DE ATRIBUIRE)
+	Manichiura operator=(const Manichiura& p)
 	{
 		if (this != &p)
 		{
@@ -587,11 +546,11 @@ public:
 		return *this;
 	}
 
-	bool operator!=(const Manichiura& p) const {  //OPERATOR !=
+	bool operator!=(const Manichiura& p) const {
 		return this->categoria != p.categoria || this->m != p.m || this->produsDefect != p.produsDefect;
 	}
 
-	friend ostream& operator<<(ostream& out, Manichiura manichiura) //OPERATOR <<
+	friend ostream& operator<<(ostream& out, Manichiura manichiura)
 	{
 		out << manichiura.getId() << ". ";
 		out << "Categoria: " << manichiura.getCategorie() << endl;
@@ -610,7 +569,7 @@ public:
 		return out;
 	}
 
-	friend istream& operator>>(istream& in, Manichiura& manichiura) //OPERATOR >>
+	friend istream& operator>>(istream& in, Manichiura& manichiura)
 	{
 		cout << "Introduceti CATEGORIA produsului: ";
 		in >> manichiura.categoria;
@@ -644,53 +603,50 @@ public:
 int Manichiura::rating = 2;
 
 
-//FAZA 5
-class MagazinOnline {
+//FAZA 5 = RELATIA HAS-A o noua clasa care detine obiecte de tipul unei clase declarate anterior
+class Parfumerie {
 private:
-	int nrparf;
-	ApaDeParfum* parfum; //vector de obiecte
+	string denumire;
+	int nrParf;
+	ApaDeParfum* parfum;
 	bool areAlcool;
 
 public:
-	MagazinOnline()
-	{
-		this->nrparf = 2;
-		this->parfum = new ApaDeParfum[2]; //apelez constructorul default din clasa ApaDeParfum
-		this->areAlcool = false;
+	string getDenumire() {
+		return this->denumire;
 	}
 
-	~MagazinOnline()
-	{
-		if (this->parfum != NULL)
-			delete[]this->parfum;
+	void setDenumire(string denumire) {
+		if (denumire.length() > 3)
+			this->denumire = denumire;
+		else this->denumire = "PARFUMERIE ONLINE";
 	}
 
 	int getNrParf() {
-		return this->nrparf;
+		return this->nrParf;
 	}
 
-	void setNrParf(int nrparf) {
-		this->nrparf = nrparf;
+	void setNrParf(int nrParf) {
+		this->nrParf = nrParf;
 	}
 
 	ApaDeParfum* getParfum() {
 		return this->parfum;
 	}
 
-	void setParfum(int nrparf, ApaDeParfum* parfum) {
+	void setParfum(int nrParf, ApaDeParfum* parfum) {
 		if (this->parfum != NULL)
 			delete[]this->parfum;
-		if (nrparf > 0 && parfum != NULL)
+		if (nrParf > 0 && parfum != NULL)
 		{
-			this->nrparf = nrparf;
-			this->parfum = new ApaDeParfum[nrparf];
-			for (int i = 0;i < nrparf;i++)
+			this->nrParf = nrParf;
+			this->parfum = new ApaDeParfum[nrParf];
+			for (int i = 0;i < nrParf;i++)
 				this->parfum[i] = parfum[i];
 		}
-		else
-		{
+		else {
 			this->parfum = NULL;
-			this->nrparf = 0;
+			this->nrParf = 0;
 		}
 	}
 
@@ -702,24 +658,254 @@ public:
 		this->areAlcool = areAlcool;
 	}
 
-	friend ostream& operator<<(ostream& out, const MagazinOnline& magazin) { //????????????????
-		out << "NUMAR PARFUMURI: " << endl;
-		if (magazin.parfum != NULL)
-		{
-			for (int i = 0;i < magazin.nrparf;i++)
-				out << magazin.parfum[i] << " " << endl;
+	Parfumerie()
+	{
+		this->denumire = "PARFUMERIE ONLINE";
+		this->nrParf = 0;
+		this->parfum = NULL;
+		this->areAlcool = false;
+	}
+
+	Parfumerie(string denumire, int nrParf, ApaDeParfum* parfum, bool areAlcool)
+	{
+		if (denumire.length() > 3)
+			this->denumire = denumire;
+		else
+			this->denumire = "PARFUMERIE ONLINE";
+		if (nrParf > 0 && parfum != NULL) {
+			this->nrParf = nrParf;
+			this->parfum = new ApaDeParfum[nrParf];
+			for (int i = 0;i < nrParf;i++)
+				this->parfum[i] = parfum[i];
 		}
-		out << (magazin.areAlcool ? "Produsele contin alcool." : "Produsele NU contin alcool.");
+		else {
+			this->nrParf = 0;
+			this->parfum = NULL;
+		}
+		this->areAlcool = areAlcool;
+	}
+
+	Parfumerie(const Parfumerie& p)
+	{
+		if (p.denumire.length() > 3)
+			this->denumire = p.denumire;
+		else
+			this->denumire = "PARFUMERIE ONLINE";
+		if (p.nrParf > 0 && p.parfum != NULL) {
+			this->nrParf = p.nrParf;
+			this->parfum = new ApaDeParfum[p.nrParf];
+			for (int i = 0;i < p.nrParf;i++)
+				this->parfum[i] = p.parfum[i];
+		}
+		else {
+			this->nrParf = 0;
+			this->parfum = NULL;
+		}
+		this->areAlcool = p.areAlcool;
+	}
+
+	~Parfumerie()
+	{
+		if (this->parfum != NULL)
+			delete[]this->parfum;
+	}
+
+	friend ostream& operator<<(ostream& out, const Parfumerie& parf) {
+		out << "PARFUMERIE: " << parf.denumire << endl;
+		out << "NUMAR PARFUMURI: " << parf.nrParf << endl;
+		for (int i = 0;i < parf.nrParf;i++)
+			out << "PARFUMUL " << i + 1 << ": " << parf.parfum[i] << " " << endl;
+		out << (parf.areAlcool ? "Produsele contin alcool." : "Produsele NU contin alcool.") << endl;
 		return out;
 	}
 
-	ApaDeParfum operator[](int index) {
-		if (index >= 0 && index < this->nrparf)
+	Parfumerie operator=(const Parfumerie& p) {
+		if (this != &p)
+		{
+			if (this->parfum != NULL)
+				delete[]this->parfum;
+			if (p.denumire.length() > 3)
+				this->denumire = p.denumire;
+			else
+				this->denumire = "PARFUMERIE ONLINE";
+			if (p.nrParf > 0 && p.parfum != NULL) {
+				this->nrParf = p.nrParf;
+				this->parfum = new ApaDeParfum[p.nrParf];
+				for (int i = 0;i < p.nrParf;i++)
+					this->parfum[i] = p.parfum[i];
+			}
+			else {
+				this->nrParf = 0;
+				this->parfum = NULL;
+			}
+			this->areAlcool = p.areAlcool;
+		}
+		return *this;
+	}
+
+	ApaDeParfum& operator[](int index) {
+		if (index >= 0 && index < this->nrParf)
 			return this->parfum[index];
 	}
 
-	explicit operator bool() {
-		return this->areAlcool;
+	explicit operator string() {
+		return this->denumire;
+	}
+};
+
+
+//FAZA 6
+
+
+//FAZA 7 = RELATIA IS-A clasele vor mosteni atributele claselor declarate anterior
+class ParfumuriArabesti :public ApaDeParfum {
+private:
+	int nrparfvandute;
+	int* vector;
+
+public:
+	int getNrParfVandute() {
+		return this->nrparfvandute;
+	}
+
+	void setNrParfVandute(int nrparfvandute) {
+		if (nrparfvandute > 0)
+			this->nrparfvandute = nrparfvandute;
+		else this->nrparfvandute = 0;
+	}
+
+	int* getComenzi() {
+		return this->vector;
+	}
+
+	void setComenzi(int nrparfvandute, int* vector) {
+		if (nrparfvandute > 0 && vector != NULL)
+		{
+			this->nrparfvandute = nrparfvandute;
+			this->vector = new int[nrparfvandute];
+			for (int i = 0;i < nrparfvandute;i++)
+				this->vector[i] = vector[i];
+		}
+		else {
+			this->nrparfvandute = 0;
+			this->vector = NULL;
+		}
+	}
+
+	ParfumuriArabesti() :ApaDeParfum() {
+		this->nrparfvandute = 0;
+		this->vector = NULL;
+	}
+
+	ParfumuriArabesti(int id, int n, float* v, string marca, bool stoc, int nrparfvandute, int* vector) :ApaDeParfum(id, n, v, marca, stoc) {
+		if (nrparfvandute > 0 && vector != NULL)
+		{
+			this->nrparfvandute = nrparfvandute;
+			this->vector = new int[nrparfvandute];
+			for (int i = 0;i < nrparfvandute;i++)
+				this->vector[i] = vector[i];
+		}
+		else {
+			this->nrparfvandute = 0;
+			this->vector = NULL;
+		}
+	}
+
+	ParfumuriArabesti(const ParfumuriArabesti& p) :ApaDeParfum(p) {
+		if (p.nrparfvandute > 0 && p.vector != NULL)
+		{
+			this->nrparfvandute = p.nrparfvandute;
+			this->vector = new int[p.nrparfvandute];
+			for (int i = 0;i < p.nrparfvandute;i++)
+				this->vector[i] = p.vector[i];
+		}
+		else {
+			this->nrparfvandute = 0;
+			this->vector = NULL;
+		}
+	}
+
+	~ParfumuriArabesti() {
+		if (this->vector != NULL)
+			delete[]this->vector;
+	}
+
+	friend ostream& operator<<(ostream& out, const ParfumuriArabesti& parf) {
+		out << (ApaDeParfum&)parf;
+		out << "Numar comenzi: " << parf.nrparfvandute << endl;
+		for (int i = 0;i < parf.nrparfvandute;i++)
+			out << "Comanda " << i + 1 << ": " << parf.vector[i] << " parfumuri." << endl;
+		return out;
+	}
+
+	ParfumuriArabesti operator=(const ParfumuriArabesti& p) {
+		if (this != &p)
+		{
+			if (this->vector != NULL)
+				delete[]this->vector;
+			if (p.nrparfvandute > 0 && p.vector != NULL)
+			{
+				this->nrparfvandute = p.nrparfvandute;
+				this->vector = new int[p.nrparfvandute];
+				for (int i = 0;i < p.nrparfvandute;i++)
+					this->vector[i] = p.vector[i];
+			}
+			else {
+				this->nrparfvandute = 0;
+				this->vector = NULL;
+			}
+		}
+		return *this;
+	}
+};
+
+class MachiajProduseCrueltyFree :public Machiaj {
+private:
+	string marca;
+	bool etichetaVerde;
+
+public:
+	string getMarca() {
+		return this->marca;
+	}
+
+	void setMarca() {
+		if (marca.length() > 4)
+			this->marca = marca;
+		else this->marca = "Catrice";
+	}
+
+	bool getCrueltyFree() {
+		return this->etichetaVerde;
+	}
+
+	void setCrueltyFree(bool crueltyFree) {
+		this->etichetaVerde = crueltyFree;
+	}
+
+	MachiajProduseCrueltyFree() :Machiaj() {
+		this->marca = "Catrice";
+		this->etichetaVerde = true;
+	}
+
+	MachiajProduseCrueltyFree(int id, const char* categorie, float pret, bool crueltyFree, string marca, bool etichetaVerde) :Machiaj(id, categorie, pret, crueltyFree) {
+		this->marca = marca;
+		this->etichetaVerde = etichetaVerde;
+	}
+
+	MachiajProduseCrueltyFree(const MachiajProduseCrueltyFree& p) :Machiaj(p) {
+		if (p.marca.length() > 4)
+			this->marca = p.marca;
+		else this->marca = "Catrice";
+		this->etichetaVerde = p.etichetaVerde;
+	}
+
+	friend ostream& operator<<(ostream& out, const MachiajProduseCrueltyFree& m)
+	{
+		out << (Machiaj&)m;
+		out << "Marca prodului: " << m.marca << endl;
+		out << (m.etichetaVerde ? "Produsele nu sunt testate pe animale." : "Produsele sunt testate pe animale.");
+		return out;
 	}
 };
 
@@ -765,8 +951,8 @@ int main()
 
 	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
 
-	Machiaj prod1;
-	cout << prod1;
+	/*Machiaj prod1;
+	out << prod1;
 
 	cout << endl << endl;
 	Machiaj prod2(2, "Fard de pleoape", 80, true);
@@ -841,37 +1027,58 @@ int main()
 
 	cout << endl << endl << "   Rating-ul acestor produse porneste de la: " << Manichiura::Rating() << " stele.";
 
-	cout << endl << endl << endl << endl;
+	cout << endl << endl << endl << endl;*/
 
-	////FAZA 5
-	//cout << "Relatia de HAS A: " << endl;
-	//MagazinOnline magazin;
-	//cout << magazin << endl; //?????????????
-	//magazin[1] = parfum1;
-	//cout << magazin[1].getMarca() << endl; //se va afisa Marca din constructorul default
-	//bool alcool = (bool)magazin;
-	//cout << magazin;
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
 
-	//cout << endl << endl << endl << endl;
+	//FAZA 4
+
+	//FAZA 5 = RELATIA HAS-A o noua clasa care detine obiecte de tipul unei clase declarate anterior
+	cout << "Relatia de HAS A: " << endl << endl;
+
+	Parfumerie magazin1;
+	cout << magazin1 << endl << endl;
+
+	ApaDeParfum parfum[3] = { parfum1, parfum2, parfum3 };
+	Parfumerie magazin2("NOTINO", 3, parfum, true);
+	cout << magazin2 << endl << endl;
+
+	Parfumerie magazin3(magazin2);
+	cout << magazin3 << endl << endl;
+
+	cout << "OPERATOR=: " << endl;
+	Parfumerie magazin4;
+	magazin4 = magazin1;
+	cout << magazin4 << endl << endl;
+
+	cout << "OPERATOR INDEX: " << endl;
+	cout << magazin2 << endl;
+	magazin2[1] = parfum1;
+	cout << magazin2 << endl << endl;
+
+	cout << "OPERATOR CAST EXPLICIT: " << endl;
+	string nume = (string)magazin2;
+	cout << nume;
+
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
 
 	//FAZA 6
 
-	ApaDeParfum parfum11;
-	ofstream file1;
-	file1.open("parfum.txt", ios::out);
-	file1 << parfum11;
-	file1.close();
+	//FAZA 7 = RELATIA IS-A clasele vor mosteni atributele claselor declarate anterior
+	cout << "Relatia de IS A: " << endl << endl;
 
-	ApaDeParfum parfum12;
-	ifstream file2;
-	file2.open("parfum.txt", ios::in);
-	file2 >> parfum12;
-	cout << parfum12;
-	file2.close();
+	ParfumuriArabesti pa1;
+	cout << pa1 << endl << endl;
 
-	cout << endl << endl;
+	int vector[3] = { 11,5,20 };
+	ParfumuriArabesti pa2(2, 10, v, "Givenchy", true, 3, vector);
+	cout << pa2 << endl << endl;
 
+	MachiajProduseCrueltyFree mcf1;
+	cout << mcf1 << endl << endl;
 
+	MachiajProduseCrueltyFree mcf2(2, "Fard de pleoape", 80, true, "NYX", true);
+	cout << mcf2 << endl;
 
-
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
 }
