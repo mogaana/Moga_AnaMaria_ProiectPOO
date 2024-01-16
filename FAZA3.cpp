@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include <fstream>
 using namespace std;
 
@@ -12,11 +13,9 @@ public:
 class AbstractDepozit {
 public:
 	virtual void disponibilitate() = 0;
-};
+}; //FAZA 8
 
-
-
-class ApaDeParfum :public AbstractDepozit {
+class ApaDeParfum:public AbstractDepozit {
 private:
 	const int id;
 	int n;										//dimens vector
@@ -147,7 +146,7 @@ public:
 	friend float pretMediu(const ApaDeParfum& parfum);
 
 	//FAZA 3
-	ApaDeParfum operator=(const ApaDeParfum& p)
+	ApaDeParfum operator=(const ApaDeParfum& p)								//OPERATOR = (DE ATRIBUIRE)
 	{
 		if (this != &p)
 		{
@@ -172,7 +171,7 @@ public:
 		return *this;
 	}
 
-	ApaDeParfum operator+(const ApaDeParfum& p)
+	ApaDeParfum operator+(const ApaDeParfum& p) // OPERATOR +                  
 	{
 		ApaDeParfum aux = *this;
 		aux.n = this->n + p.n;
@@ -194,9 +193,9 @@ public:
 		return aux;
 	}
 
-	friend ostream& operator<<(ostream& out, const ApaDeParfum& parfum);
+	friend ostream& operator<<(ostream& out, const ApaDeParfum& parfum); //OPERATOR <<
 
-	friend istream& operator>>(istream& in, ApaDeParfum& parfum)
+	friend istream& operator>>(istream& in, ApaDeParfum& parfum)	    //OPERATOR >> inline
 	{
 		cout << "Introduceti MARCA: ";
 		in >> parfum.marca;
@@ -227,6 +226,34 @@ public:
 	{
 		return rating;
 	}
+
+	//FAZA 6 - FISIER TEXT (1)
+	friend ofstream& operator<<(ofstream& out, const ApaDeParfum& parfum) {
+		out << parfum.marca << endl;
+		out << "   Sunt in stoc produse cu ac marca? (0-NU, 1-DA) " << parfum.stoc << endl;
+		out << "   Preturile parfumurilor: ";
+		if (parfum.v != NULL)
+		{
+			for (int i = 0;i < parfum.n;i++)
+				out << parfum.v[i] << " ";
+			out << endl;
+		}
+		else
+			out << "nu avem parfumuri." << endl;
+		//out << "   Rating-ul minim pentru selectia de parfumuri este de: " << parfum.rating << " stele.";
+		return out;
+	}
+
+	friend ifstream& operator>>(ifstream& in, ApaDeParfum& parfum) {
+		in >> parfum.marca;
+		in >> parfum.stoc;
+		in >> parfum.n;
+		if (parfum.v != NULL)
+			delete[]parfum.v;
+		for (int i = 0;i < parfum.n;i++)
+			in >> parfum.v[i];
+		return in;
+	}
 };
 
 int ApaDeParfum::rating = 3;
@@ -249,7 +276,7 @@ float pretMediu(const ApaDeParfum& parfum)
 	return media;
 }
 
-ostream& operator<<(ostream& out, const ApaDeParfum& parfum)
+ostream& operator<<(ostream& out, const ApaDeParfum& parfum)                        //FUNCTIE OPERATOR <<
 {
 	out << parfum.getId() << ". " << "Parfum: " << parfum.marca << endl;
 	out << "   Sunt in stoc produse cu ac marca? (0-NU, 1-DA) " << parfum.stoc << endl;
@@ -269,7 +296,7 @@ ostream& operator<<(ostream& out, const ApaDeParfum& parfum)
 
 
 
-class Machiaj :public AbstractMagazin {
+class Machiaj:public AbstractMagazin {
 private:
 	const int id;
 	char* categorie;
@@ -359,7 +386,7 @@ public:
 	}
 
 	//FAZA 3
-	Machiaj operator=(const Machiaj& p)
+	Machiaj operator=(const Machiaj& p)	 //OPERATOR = (DE ATRIBUIRE)
 	{
 		if (this != &p)
 		{
@@ -368,17 +395,18 @@ public:
 				delete[]this->categorie;
 			this->categorie = new char[strlen(p.categorie) + 1];
 			strcpy_s(this->categorie, strlen(p.categorie) + 1, p.categorie);
+
 			this->pret = p.pret;
 			this->crueltyFree = p.crueltyFree;
 		}
 		return *this;
 	}
 
-	bool operator<=(const Machiaj& p) {
+	bool operator<=(const Machiaj& p) {  //OPERATOR <=
 		return this->pret <= p.pret;
 	}
 
-	friend ostream& operator<<(ostream& out, const Machiaj machiaj)
+	friend ostream& operator<<(ostream& out, const Machiaj machiaj) //OPERATOR <<
 	{
 		out << machiaj.id << ". " << "Categoria produsului de machiaj: " << machiaj.categorie << endl;
 		out << "   Pret: " << machiaj.pret << endl;
@@ -387,16 +415,17 @@ public:
 		return out;
 	}
 
-	friend istream& operator>>(istream& in, Machiaj& machiaj)
+	friend istream& operator>>(istream& in, Machiaj& machiaj) //OPERATOR >>
 	{
 		cout << "Introduceti CATEGORIA produsului de machiaj: ";
-		char buffer[30];
+		char buffer[256];
 		in >> buffer;
 		machiaj.setCategorie(buffer);
 		if (machiaj.categorie != NULL)
 			delete[]machiaj.categorie;
 		machiaj.categorie = new char[strlen(buffer) + 1];
 		strcpy_s(machiaj.categorie, strlen(buffer) + 1, buffer);
+
 		cout << "Introduceti PRET: ";
 		in >> machiaj.pret;
 		cout << "Produsul este CRUELTY FREE? (0-NU, 1-DA) ";
@@ -408,6 +437,38 @@ public:
 	static int durataExp()
 	{
 		return durataExpirare;
+	}
+
+	//FAZA 6 - FISIER BINAR (2)
+	void serializare(string numeFis)
+	{
+		ofstream fisbin(numeFis, ios::out, ios::binary);
+		int lu = strlen(this->categorie);
+		fisbin.write((char*)&lu, sizeof(lu));
+		fisbin.write(this->categorie, lu + 1);
+		fisbin.write((char*)&pret, sizeof(pret));
+		fisbin.write((char*)&crueltyFree, sizeof(crueltyFree));
+		fisbin.close();
+	}
+
+	void deserializare(string numeFis)
+	{
+		ifstream fisbin(numeFis, ios::in, ios::binary);
+
+		if (fisbin.is_open()) //if(fisbin)
+		{
+			if (this->categorie != NULL)
+				delete[]this->categorie;
+			int lu = 0;
+			fisbin.read((char*)&lu, sizeof(lu));
+			this->categorie = new char[lu + 1];
+			fisbin.read(this->categorie, lu + 1);
+			fisbin.read((char*)&pret, sizeof(pret));
+			fisbin.read((char*)&crueltyFree, sizeof(crueltyFree));
+			fisbin.close();
+		}
+
+		else cout << "FISIERUL BINAR NU EXISTA!";
 	}
 };
 
@@ -540,7 +601,7 @@ public:
 	}
 
 	//FAZA 3
-	Manichiura operator=(const Manichiura& p)
+	Manichiura operator=(const Manichiura& p) //OPERATOR = (DE ATRIBUIRE)
 	{
 		if (this != &p)
 		{
@@ -567,11 +628,11 @@ public:
 		return *this;
 	}
 
-	bool operator!=(const Manichiura& p) const {
+	bool operator!=(const Manichiura& p) const {  //OPERATOR !=
 		return this->categoria != p.categoria || this->m != p.m || this->produsDefect != p.produsDefect;
 	}
 
-	friend ostream& operator<<(ostream& out, Manichiura manichiura)
+	friend ostream& operator<<(ostream& out, Manichiura manichiura) //OPERATOR <<
 	{
 		out << manichiura.getId() << ". ";
 		out << "Categoria: " << manichiura.getCategorie() << endl;
@@ -590,7 +651,7 @@ public:
 		return out;
 	}
 
-	friend istream& operator>>(istream& in, Manichiura& manichiura)
+	friend istream& operator>>(istream& in, Manichiura& manichiura) //OPERATOR >>
 	{
 		cout << "Introduceti CATEGORIA produsului: ";
 		in >> manichiura.categoria;
@@ -618,6 +679,82 @@ public:
 	static int Rating()
 	{
 		return Manichiura::rating;
+	}
+
+	//FAZA 6 - FISIER TEXT (3)
+	friend ofstream& operator<<(ofstream& out, Manichiura manichiura)
+	{
+		out << "Categoria: " << manichiura.getCategorie() << endl;
+		out << "   Sunt in stoc produse din ac categorie care au un defect? (0-NU, 1-DA) " << manichiura.getProdusDefect() << endl;
+		out << "   Din aceasta categorie avem: ";
+		if (manichiura.w != NULL) {
+			for (int i = 0;i < manichiura.m;i++)
+			{
+				out << manichiura.w[i] << ", ";
+
+			}
+			out << "tipuri de produse (marci diferite).";
+		}
+		else cout << "0 tipuri de produse (marci diferite).";
+		//out << "   Rating-ul acestor produse porneste de la: " << manichiura.Rating() << " stele.";
+		return out;
+	}
+
+	friend ifstream& operator>>(ifstream& in, Manichiura& manichiura)
+	{
+		in >> manichiura.categoria;
+		in >> manichiura.produsDefect;
+		in >> manichiura.m;
+		if (manichiura.w != NULL)
+			delete[]manichiura.w;
+		for (int i = 0;i < manichiura.m;i++)
+			in >> manichiura.w[i];
+		return in;
+	}
+
+	//FAZA 6 - FISIER BINAR (4)
+	void serializare(string numeFis)
+	{
+		ofstream fisbin(numeFis, ios::out, ios::binary);
+		int lu = this->categoria.size(); //sau length
+		fisbin.write((char*)&lu, sizeof(lu));
+		fisbin.write(this->categoria.c_str(), lu + 1); //functia care transforma din string in char=c_str()
+		fisbin.write((char*)&m, sizeof(m));
+
+		for (int i = 0;i < m;i++)
+		{
+			fisbin.write((char*)&w[i], sizeof(w[i]));
+		}
+		fisbin.write((char*)&produsDefect, sizeof(produsDefect));
+
+		fisbin.close();
+	}
+
+	void deserializare(string numeFis)
+	{
+		ifstream fisbin(numeFis, ios::in, ios::binary);
+
+		if (fisbin.is_open())
+		{
+			if (this->w != NULL)
+				delete[]this->w;
+			int lu = 0;
+			fisbin.read((char*)&lu, sizeof(lu));
+			char* s = new char[lu + 1];
+			fisbin.read(s, lu + 1);
+			this->categoria = s;
+			fisbin.read((char*)&m, sizeof(m));
+			this->w = new int[m];
+			for (int i = 0;i < m;i++)
+			{
+				fisbin.read((char*)&w[i], sizeof(w[i]));
+			}
+			fisbin.read((char*)&produsDefect, sizeof(produsDefect));
+			delete[]s;
+			fisbin.close();
+		}
+
+		else cout << "FISIERUL BINAR NU EXISTA!";
 	}
 };
 
@@ -883,8 +1020,6 @@ public:
 	}
 };
 
-
-
 class MachiajProduseCrueltyFree :public Machiaj {
 private:
 	string marca;
@@ -944,6 +1079,272 @@ public:
 int main()
 {
 	float v[10] = { 125, 140, 167, 211, 110, 464, 257, 329, 159, 255 }; //vector cu preturile parfumurilor
+
+	ApaDeParfum parfum1;
+	cout << parfum1;
+
+	cout << endl;
+	ApaDeParfum parfum2(2, 10, v, "Givenchy", true);
+	cout << parfum2;
+	cout << endl << "   Pretul maxim al unui parfum din ac marca este: " << pretMaxim(parfum2);
+	cout << endl << "   Pretul mediu al parfumurilor din ac marca este: " << pretMediu(parfum2);
+
+	cout << endl << endl;
+	ApaDeParfum parfum3("Armani", false);
+	cout << parfum3;
+
+	cout << endl << endl;
+	cout << "OPERATOR = (DE ATRIBUIRE): " << endl;
+	ApaDeParfum parfum4;
+	cout << parfum4;
+	parfum4 = parfum3;
+	cout << parfum4;
+
+	cout << endl << endl;
+	cout << "OPERATOR >>: " << endl;
+	ApaDeParfum parfum5;
+	cin >> parfum5;
+	cout << endl;
+	cout << parfum5;
+
+	cout << endl << endl;
+	cout << "OPERATOR +: " << endl;
+	ApaDeParfum parfum6;
+	parfum6 = parfum2 + parfum5;
+	cout << parfum6;
+
+	cout << endl << endl << "   Rating-ul minim pentru selectia de parfumuri este de: " << ApaDeParfum::ratingMin() << " stele.";
+
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
+
+	/*Machiaj prod1;
+	cout << prod1;
+
+	cout << endl << endl;
+	Machiaj prod2(2, "Fard de pleoape", 80, true);
+	cout << prod2;
+
+	cout << endl << endl;
+	Machiaj prod3("Ruj", false);
+	cout << prod3;
+
+	cout << endl << endl;
+	cout << "OPERATOR >>: " << endl;
+	Machiaj prod4;
+	cin >> prod4;
+	cout << endl << prod4;
+
+	cout << endl << endl;
+	cout << "OPERATOR = (DE ATRIBUIRE): " << endl;
+	Machiaj prod5;
+	cout << prod5;
+	prod5 = prod4;
+	cout << prod5;
+
+	cout << endl << endl;
+	cout << "OPERATOR <=: " << endl;
+	Machiaj prod6(6, "Fond de ten", 150, true);
+	cout << prod2 << endl << prod6 << endl;
+	if (prod2 <= prod6)
+		cout << "   Produsul cu id 2 are un pret mai mic sau egal cu produsul id 6." << endl;
+	else
+		cout << "   Produsul cu id 2 are un pret mai mare decat produsul id 6." << endl;
+
+	cout << endl << endl << "   Durata de expirare a produselor de machiaj este de: " << Machiaj::durataExp() << " luni.";
+
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
+
+	int w[5] = { 10, 158, 52, 4, 0 }; //vector care retine cate tipuri de produse din categoria selectata avem
+
+	Manichiura man1;
+	cout << man1;
+
+	cout << endl << endl;
+	Manichiura man2(2, "Lac de unghii", 5, w, true);
+	cout << man2;
+
+	cout << endl << endl;
+	Manichiura man3("Acetona", false);
+	cout << man3;
+
+	cout << endl << endl;
+	cout << "OPERATOR >>: " << endl;
+	Manichiura man4;
+	cin >> man4;
+	cout << man4;
+
+	cout << endl << endl;
+	cout << "OPERATORUL =: " << endl;
+	Manichiura man5;
+	cout << man5;
+	man5 = man2;
+	cout << endl << man5;
+
+	cout << endl << endl;
+	cout << "OPERATORUL !=: " << endl;
+	Manichiura man6(2, "Lac de unghii", 5, w, true);
+	cout << man2 << endl;
+	cout << man6;
+	cout << endl << endl;
+	if (man2 != man6)
+		cout << "   Cele doua obiecte sunt diferite." << endl;
+	else
+		cout << "   Cele doua obiecte sunt identice." << endl;
+
+	cout << endl << endl << "   Rating-ul acestor produse porneste de la: " << Manichiura::Rating() << " stele.";
+
+	cout << endl << endl << endl << endl;*/
+
+	//FAZA 4
+	/*//vector cu obiecte de tipul clasei ApaDeParfum
+	const int nrParf = 2;
+	ApaDeParfum vectorParf[nrParf];
+
+	cout << "Citire obiecte pentru vectorParfum:" << endl;
+	for (int i = 0; i < nrParf; ++i) {
+		cin >> vectorParf[i];
+	}
+
+	cout << "\nAfisare obiecte pentru vectorParfum:" << endl;
+	for (int i = 0; i < nrParf; ++i) {
+		cout << vectorParf[i] << endl;
+	}
+
+	//vector cu obiecte de tipul clasei Machiaj
+	const int nrProd = 3;
+	Machiaj vectorMachiaj[nrProd];
+
+	cout << "\nCitire obiecte pentru vectorMachiaj:" << endl;
+	for (int i = 0; i < nrProd; ++i) {
+		cin >> vectorMachiaj[i];
+	}
+
+	cout << "\nAfisare obiecte pentru vectorMachiaj:" << endl;
+	for (int i = 0; i < nrProd; ++i) {
+		cout << vectorMachiaj[i] << endl;
+	}
+
+	//vector cu obiecte de tipul clasei Manichiura
+	const int nrProdM = 3;
+	Manichiura vectorManichiura[nrProdM];
+
+	cout << "\nCitire obiecte pentru vectorManichiura:" << endl;
+	for (int i = 0; i < nrProdM; ++i) {
+		cin >> vectorManichiura[i];
+	}
+
+	cout << "\nAfisare obiecte pentru vectorManichiura:" << endl;
+	for (int i = 0; i < nrProdM; ++i) {
+		cout << vectorManichiura[i] << endl;
+	}
+
+	//matrice de obiecte ApaDeParfum
+	const int nrlinii = 2;
+	const int nrcoloane = 2;
+	ApaDeParfum matrice[nrlinii][nrcoloane];
+
+	cout << "\nCitire obiecte pentru matricea ApaDeParfum:" << endl;
+	for (int i = 0; i < nrlinii; ++i) {
+		for (int j = 0; j < nrcoloane; ++j) {
+			cin >> matrice[i][j];
+		}
+	}
+
+	cout << "\nAfisare obiecte pentru matricea ApaDeParfum:" << endl;
+	for (int i = 0; i < nrlinii; ++i) {
+		for (int j = 0; j < nrcoloane; ++j) {
+			cout << matrice[i][j] << endl;
+		}
+	}*/
+
+	//FAZA 5 = RELATIA HAS-A o noua clasa care detine obiecte de tipul unei clase declarate anterior
+	cout << "Relatia de HAS-A: " << endl << endl;
+
+	Parfumerie magazin1;
+	cout << magazin1 << endl << endl;
+
+	ApaDeParfum parfum[3] = { parfum1, parfum2, parfum3 };
+	Parfumerie magazin2("NOTINO", 3, parfum, true);
+	cout << magazin2 << endl << endl;
+
+	Parfumerie magazin3(magazin2);
+	cout << magazin3 << endl << endl;
+
+	cout << "OPERATOR=: " << endl;
+	Parfumerie magazin4;
+	magazin4 = magazin1;
+	cout << magazin4 << endl << endl;
+
+	cout << "OPERATOR INDEX: " << endl;
+	cout << magazin2 << endl;
+	magazin2[1] = parfum1;
+	cout << magazin2 << endl << endl;
+
+	cout << "OPERATOR CAST EXPLICIT: " << endl;
+	string nume = (string)magazin2;
+	cout << nume;
+
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
+
+	//FAZA 6
+	cout << "clasa ApaDeParfum, FISIER TEXT: " << endl << endl;
+	ofstream f("fisier1.txt");
+	f << parfum2;
+	f.close();
+
+	ifstream g("fisier1.txt");
+	g >> parfum3;
+	g.close();
+	cout << parfum3 << endl << endl;
+
+	cout << "clasa Machiaj, FISIER BINAR: " << endl << endl;
+	Machiaj prod2(2, "Fard de pleoape", 80, true);
+	prod2.serializare("fisier2.dat");
+	cout << prod2 << endl << endl;
+
+	Machiaj prod3;
+	prod3.deserializare("fisier2.dat");
+	cout << prod3 << endl << endl;
+
+	cout << "clasa Manichiura, FISIER TEXT: " << endl << endl;
+	Manichiura man1;
+	int w[5] = { 10, 158, 52, 4, 0 };
+	Manichiura man2(2, "Lac de unghii", 5, w, true);
+	Manichiura man3("Acetona", false);
+
+	ofstream h("fisier3.txt");
+	h << man2;
+	h.close();
+
+	cout << "clasa Manichiura, FISIER BINAR: " << endl << endl;
+	man2.serializare("fisier4.dat");
+	cout << man2 << endl << endl;
+
+	man2.deserializare("fisier4.dat");
+	cout << man2 << endl << endl;
+
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
+
+	//FAZA 7 = RELATIA IS-A clasele vor mosteni atributele claselor declarate anterior
+	cout << "Relatia de IS-A: " << endl << endl;
+
+	ParfumuriArabesti pa1;
+	cout << pa1 << endl << endl;
+
+	int vector[3] = { 11,5,20 };
+	ParfumuriArabesti pa2(2, 10, v, "Givenchy", true, 3, vector);
+	cout << pa2 << endl << endl;
+
+	MachiajProduseCrueltyFree mcf1;
+	cout << mcf1 << endl << endl;
+
+	MachiajProduseCrueltyFree mcf2(2, "Fard de pleoape", 80, true, "NYX", true);
+	cout << mcf2 << endl;
+
+	cout << endl << endl << "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||" << endl << endl;
+
+	//FAZA 8 - trebuie comentat tot ce am pus mai sus
+	/*float v[10] = {125, 140, 167, 211, 110, 464, 257, 329, 159, 255}; //vector cu preturile parfumurilor
 	ApaDeParfum parfum1;
 	ApaDeParfum parfum2(2, 10, v, "Givenchy", true);
 
@@ -952,15 +1353,12 @@ int main()
 	ParfumuriArabesti pa2(2, 10, v, "Givenchy", true, 3, vector);
 
 
-
 	Machiaj prod2(2, "Fard de pleoape", 80, true);
 	Machiaj prod3("Ruj", false);
 
 	MachiajProduseCrueltyFree mcf1;
 	MachiajProduseCrueltyFree mcf2(2, "Fard de pleoape", 80, true, "NYX", true);
 
-
-	//FAZA 8
 
 	cout << "EARLY BINDING CLASA ABSTRACTDEPOZIT + APADEPARFUM + PARFUMURIARABESTI: " << endl;
 	parfum2.disponibilitate();
@@ -1002,5 +1400,5 @@ int main()
 	pprod1 = &prod3;
 	pprod2 = &mcf1;
 	pprod1->clienti();
-	pprod2->clienti();
+	pprod2->clienti();*/
 }
